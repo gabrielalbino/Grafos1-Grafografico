@@ -10,8 +10,9 @@
 | `(TRANCOU A DISCIPLINA)` |  Jaime Juan  |
 
 ## Sobre 
-O objetivo do projeto é implementar um minipaint apenas com a ferramenta de "balde" e "lapis" para demonstrar a diferença visualmente entre um floodfill utilizando DFS ou BFS.
-
+O objetivo do projeto é implementar um minipaint apenas com a ferramenta de "balde", "vetor" e "lapis" para demonstrar:
+1. A diferença visualmente entre um floodfill utilizando DFS ou BFS utilizando a ferramenta balde
+2. A demonstração do caminho mais curto entre dois pontos de um grafo utilizando a ferramenta vetor
 ## Screenshots
 Adicione 3 ou mais screenshots do projeto em funcionamento.
 
