@@ -7,9 +7,19 @@ import useWindowDimensions from "./helpers/browserHelper";
 import { useState } from 'react';
 import { doAction } from './helpers/paintHelper';
 import { renderTools } from './helpers/toolsHelper';
+import invert from 'invert-color';
 
 function MiniPaint() {
-
+  document.oncontextmenu = function (e) {
+    stopEvent(e);
+    console.log(e.target);
+  }
+  function stopEvent(event) {
+    if (event.preventDefault != null)
+      event.preventDefault();
+    if (event.stopPropagation != null)
+      event.stopPropagation();
+  }
   const { height, width } = useWindowDimensions();
 
   const [grid, setGrid] = useState(generateGrid(height, width));
@@ -27,8 +37,7 @@ function MiniPaint() {
           grid.map((row, rowIdx) => (
             <div className="d-flex" key={rowIdx}>
               {row.map((cell, cellIdx) => (
-                <div className="cell" style={{ backgroundColor: cell.color }} key={cellIdx} onClick={() => doAction(tool, color, [rowIdx, cellIdx], grid, setGrid)}>
-                </div>
+                <div className="cell" style={{ backgroundColor: cell.color }} key={cellIdx} onContextMenu={(e) => { e.preventDefault(); doAction(tool, invert(color), cell, grid, setGrid) }} onClick={() => doAction(tool, color, cell, grid, setGrid)} />
               )
               )}
             </div>

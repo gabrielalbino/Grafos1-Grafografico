@@ -3,6 +3,10 @@
   height: 20px;
 }
 
+.cell:hover{
+  background: lightgray !important;
+}
+
 .d-flex{
   display: flex;
 }
