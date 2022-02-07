@@ -1,6 +1,5 @@
 import * as Icon from 'react-bootstrap-icons';
 
-
 const toolsTips = [
   ["Clique em um pixel para pinta-lo"],
   ["Clique em um pixel para preencher a area"],
@@ -8,7 +7,6 @@ const toolsTips = [
 ]
 
 const renderTools = (state, setState) => {
-  const invert = require('invert-color');
   const { color, tool, selectedPoint } = state;
   return (
     <>
