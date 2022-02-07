@@ -1,24 +1,36 @@
 import './MiniPaint.css';
 
-import { CirclePicker } from 'react-color';
+import { ChromePicker } from 'react-color';
 
-import { generateGrid } from "./helpers/gridHelper"
-import useWindowDimensions from "./helpers/browserHelper";
+import GridHelper from "./helpers/gridHelper"
 import { useState } from 'react';
 import { doAction } from './helpers/paintHelper';
 import { renderTools } from './helpers/toolsHelper';
 import invert from 'invert-color';
+import { useRef } from 'react';
+import { useLayoutEffect } from 'react';
 
 function MiniPaint() {
-
-  const { height, width } = useWindowDimensions();
-
+  const cubeSize = 25;
   const [state, setState] = useState({
-    grid: generateGrid(height, width),
+    gridHelper: new GridHelper(0, 0, null, null),
     tool: 0,
     color: "#ffffff",
-    selectedPoint: []
+    selectedPoint: [],
+    gridQueue: []
   });
+
+  const gridRef = useRef(null)
+
+  useLayoutEffect(() => {
+    const { clientHeight, clientWidth } = gridRef.current;
+    console.log(clientHeight, clientWidth)
+    setState(s => {
+      s.gridHelper.setDimensions(Math.ceil(clientHeight / cubeSize), Math.ceil(clientWidth / cubeSize));
+      console.log(s.gridHelper);
+      return { ...s }
+    })
+  }, [gridRef.current?.clientHeight, gridRef.current?.clientWidth])
 
   const cellClick = (e, cell, isInverted) => {
     e.preventDefault();
@@ -26,15 +38,15 @@ function MiniPaint() {
   };
 
   return (
-    <div className="d-flex">
+    <div id="wrapper" className="d-flex">
       <div className="controller">
         {renderTools(state, setState)}
-        <CirclePicker color={state.color} onChangeComplete={(color) => setState({ ...state, color: color.hex })} />
+        <ChromePicker color={state.color} onChangeComplete={(color) => setState({ ...state, color: color.hex })} />
       </div>
-      <div className="grid">
+      <div className="grid" ref={gridRef}>
         {
-          state.grid.map((row, rowIdx) => (
-            <div className="d-flex" key={rowIdx}>
+          state.gridHelper.getGrid().map((row, rowIdx) => (
+            <div className="d-flex" key={rowIdx} >
               {row.map((cell, cellIdx) => (
                 <div className="cell" style={{ backgroundColor: cell.color }} key={cellIdx} onClick={e => cellClick(e, cell, false)} onContextMenu={e => cellClick(e, cell, true)} />
               )
