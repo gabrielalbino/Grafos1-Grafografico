@@ -10,34 +10,33 @@ import { renderTools } from './helpers/toolsHelper';
 import invert from 'invert-color';
 
 function MiniPaint() {
-  document.oncontextmenu = function (e) {
-    stopEvent(e);
-    console.log(e.target);
-  }
-  function stopEvent(event) {
-    if (event.preventDefault != null)
-      event.preventDefault();
-    if (event.stopPropagation != null)
-      event.stopPropagation();
-  }
+
   const { height, width } = useWindowDimensions();
 
-  const [grid, setGrid] = useState(generateGrid(height, width));
+  const [state, setState] = useState({
+    grid: generateGrid(height, width),
+    tool: 0,
+    color: "#ffffff",
+    selectedPoint: []
+  });
 
-  const [tool, setTool] = useState(0);
-  const [color, setColor] = useState('#ffffff');
+  const cellClick = (e, cell, isInverted) => {
+    e.preventDefault();
+    doAction(cell, isInverted ? invert(state.color) : state.color, state, setState)
+  };
+
   return (
     <div className="d-flex">
       <div className="controller">
-        {renderTools(color, tool, setTool)}
-        <CirclePicker color={color} onChangeComplete={(color) => setColor(color.hex)} />
+        {renderTools(state, setState)}
+        <CirclePicker color={state.color} onChangeComplete={(color) => setState({ ...state, color: color.hex })} />
       </div>
       <div className="grid">
         {
-          grid.map((row, rowIdx) => (
+          state.grid.map((row, rowIdx) => (
             <div className="d-flex" key={rowIdx}>
               {row.map((cell, cellIdx) => (
-                <div className="cell" style={{ backgroundColor: cell.color }} key={cellIdx} onContextMenu={(e) => { e.preventDefault(); doAction(tool, invert(color), cell, grid, setGrid) }} onClick={() => doAction(tool, color, cell, grid, setGrid)} />
+                <div className="cell" style={{ backgroundColor: cell.color }} key={cellIdx} onClick={e => cellClick(e, cell, false)} onContextMenu={e => cellClick(e, cell, true)} />
               )
               )}
             </div>
