@@ -26,7 +26,8 @@ Adicione 3 ou mais screenshots do projeto em funcionamento.
 Pré-requisitos: Node v17.4.0
 
 ### Instalação:
-* Execute o comando `npm install`
+* Execute o comando `npm install -g yarn`
+* Vá até o diretorio do projeto e digite `yarn install`
 * Após a conclusão da instalação, execute o comando `npm start`
 
 
